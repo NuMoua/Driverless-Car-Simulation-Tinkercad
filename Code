@@ -1,0 +1,58 @@
+
+int trigPin = 3;
+int motor1a = 6;
+int motor1b = 7;
+int speed1 = 11;
+float duration = 0.0; // time for pulse to return back to sensor
+float distance = 0.0; // distance calculated using duration value
+
+void setup(){
+  pinMode(trigPin, OUTPUT);
+  pinMode(speed1, OUTPUT);
+  pinMode(motor1a, OUTPUT);
+  pinMode(motor1b, OUTPUT);
+  digitalWrite(motor1a, HIGH);
+  digitalWrite(motor1b, LOW);
+}
+
+float checkDistance(){
+  pinMode(trigPin, OUTPUT);
+  digitalWrite(trigPin, LOW); 
+  delayMicroseconds(2);
+ 
+  digitalWrite(trigPin, HIGH);
+  delayMicroseconds(10);
+  digitalWrite(trigPin, LOW);
+  pinMode(trigPin, INPUT);
+  
+  duration = pulseIn(trigPin, HIGH);
+  distance = (duration / 2) * 0.0344;
+  return distance;
+}
+
+void loop(){
+  if(checkDistance() > 40){
+      digitalWrite(motor1a, HIGH);
+      digitalWrite(motor1b, LOW);
+      analogWrite(speed1, 200);
+      delay(15);
+  }
+  else if(checkDistance() < 40 && checkDistance() > 30){
+      digitalWrite(motor1a, HIGH);
+      digitalWrite(motor1b, LOW);
+      analogWrite(speed1, 100);
+      delay(15);
+  }
+  else if(checkDistance() <= 30 && checkDistance() >= 20){
+      digitalWrite(motor1a, HIGH);
+      digitalWrite(motor1b, LOW);
+      analogWrite(speed1, 0);
+      delay(15);
+  }
+  else if(checkDistance() < 20){
+      digitalWrite(motor1a, LOW);
+      digitalWrite(motor1b, HIGH);
+      analogWrite(speed1, 100);
+  }
+  delay(15);
+}
